@@ -70,20 +70,20 @@ function ValueFormatter(value: number) {
     K: value / 1e3,
     "": Math.floor(value),
   }).map((entry) => [entry[0], ValueFormatter.round(entry[1])]);
-  return entries[entries.findIndex((entry) => entry[0] ? !!entry[1] : true)];
+  return entries[entries.findIndex((entry) => (entry[0] ? !!entry[1] : true))];
 }
 
 ValueFormatter.round = (value: number) => {
   if (value >= 1000) {
     return undefined;
   } else if (value >= 100) {
-    return +(value.toPrecision(3))
+    return +value.toPrecision(3);
   } else if (value >= 1) {
-    return +(value.toPrecision(2))
+    return +value.toPrecision(2);
   } else {
     return 0;
   }
-}
+};
 
 export function Value(num: number, unit?: string) {
   const value = ValueFormatter(num);
