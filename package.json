@@ -1,0 +1,54 @@
+{
+  "name": "@gatsby-tv/utilities",
+  "description": "Gatsby shared Typescript utility library.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gatsby-tv/utilities.git"
+  },
+  "version": "0.4.0",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "license": "AGPL-3.0",
+  "private": false,
+  "scripts": {
+    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",
+    "types": "tsc --noEmit",
+    "types:watch": "yarn run check -- --watch",
+    "clean": "rm -rf dist",
+    "build": "yarn run build:tsc && yarn run build:babel",
+    "build:tsc": "tsc --emitDeclarationOnly",
+    "build:babel": "babel lib --out-dir dist --extensions \".ts,.tsx\" --source-maps inline"
+  },
+  "peerDependencies": {
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "react-is": "^17.0.1",
+    "styled-components": "^5.2.1"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.12.1",
+    "@babel/core": "^7.11.6",
+    "@babel/plugin-proposal-class-properties": "^7.12.1",
+    "@babel/plugin-proposal-private-methods": "^7.12.1",
+    "@babel/plugin-proposal-private-property-in-object": "^7.12.1",
+    "@babel/plugin-transform-object-assign": "^7.12.1",
+    "@babel/preset-env": "^7.12.1",
+    "@babel/preset-react": "^7.12.5",
+    "@babel/preset-typescript": "^7.12.1",
+    "@types/react": "^16.9.56",
+    "@types/react-dom": "^17.0.0",
+    "@types/react-is": "^17.0.0",
+    "@types/styled-components": "^5.1.7",
+    "babel-loader": "^8.1.0",
+    "babel-plugin-module-resolver": "^4.0.0",
+    "core-js": "3.7.0",
+    "prettier": "^2.2.1",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "react-is": "^17.0.1",
+    "styled-components": "^5.2.1",
+    "typescript": "^4.0.5"
+  },
+  "dependencies": {
+  }
+}
