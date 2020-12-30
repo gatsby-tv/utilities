@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 
 import { useSelect } from "@lib/utilities/use-select";
 
@@ -6,15 +6,23 @@ export interface BreakpointSet {
   [key: string]: string;
 }
 
-export function useBreakpoints(points: BreakpointSet) {
+interface MediaQueryHandler {
+  (event: MediaQueryListEvent): void;
+}
+
+interface MediaQuerySpecification {
+  [key: string]: [MediaQueryList, MediaQueryHandler];
+}
+
+export function useBreakpoints(points: BreakpointSet): string | undefined {
   const items = Object.keys(points);
-  const queries = useRef<object>({});
+  const queries = useRef<MediaQuerySpecification>({});
   const [selection, setSelection] = useSelect(items);
 
   useEffect(() => {
-    const handleChange = (item: string) => {
-      return (query: any) => {
-        if (query.matches) {
+    const handleChange = (item: string): MediaQueryHandler => {
+      return (event: MediaQueryListEvent) => {
+        if (event.matches) {
           setSelection(item);
         }
       };
@@ -25,17 +33,18 @@ export function useBreakpoints(points: BreakpointSet) {
         const query = window.matchMedia(points[item]);
         const handler = handleChange(item);
         query.addEventListener("change", handler);
-        handler(query);
         return [item, [query, handler]];
       })
     );
 
     return () => {
-      Object.values(queries.current).map((query: any) =>
+      Object.values(
+        queries.current
+      ).map((query: [MediaQueryList, MediaQueryHandler]) =>
         query[0].removeEventListener("change", query[1])
       );
     };
-  }, []);
+  }, [items, points, setSelection]);
 
   return Object.keys(selection).find((item) => selection[item]);
 }

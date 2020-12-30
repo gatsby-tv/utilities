@@ -14,7 +14,7 @@ TimeFormatter.reduce = (acc: string, value: number) => {
   }
 };
 
-export function Time(seconds: number) {
+export function Time(seconds: number): string {
   if (isNaN(seconds)) {
     return "0:00";
   }
@@ -30,8 +30,9 @@ export function Time(seconds: number) {
   }
 }
 
-function AgeFormatter(then: Date) {
+function AgeFormatter(unix: number) {
   const now = new Date();
+  const then = new Date(unix);
   const entries = Object.entries({
     year: now.getFullYear() - then.getFullYear(),
     month: now.getMonth() - then.getMonth(),
@@ -51,8 +52,8 @@ AgeFormatter.unit = (entry: [string, number]) =>
 AgeFormatter.suffix = (entry: [string, number]) =>
   entry[1] < 0 ? "from now" : "ago";
 
-export function Age(date: Date) {
-  const age = AgeFormatter(date);
+export function Age(unix: number): string | undefined {
+  const age = AgeFormatter(unix);
   if (typeof age === "undefined") return undefined;
   return [
     AgeFormatter.value(age),
@@ -85,10 +86,24 @@ ValueFormatter.round = (value: number) => {
   }
 };
 
-export function Value(num: number, unit?: string) {
+export function Value(num: number, unit?: string): string | undefined {
   const value = ValueFormatter(num);
   if (typeof value[1] === "undefined") return undefined;
   const suffix = !value[0] && value[1] === 1 ? unit : `${unit}s`;
   const result = value?.reverse().join("");
   return unit ? `${result} ${suffix}` : result;
+}
+
+export function FullValue(num: number, unit?: string): string {
+  const value = num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  const suffix = num === 1 ? unit : `${unit}s`;
+  return unit ? `${value} ${suffix}` : value;
+}
+
+export function FullAge(unix: number, locale?: string): string {
+  return new Date(unix).toLocaleDateString(locale ?? "en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
 }

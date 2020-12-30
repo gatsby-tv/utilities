@@ -1,6 +1,12 @@
 import { useContext } from "react";
-import { ThemeContext } from "styled-components";
+import { ThemeContext, DefaultTheme } from "styled-components";
 
-export const useTheme = () => {
-  return useContext(ThemeContext);
-};
+export function useTheme(): DefaultTheme {
+  const context = useContext(ThemeContext);
+
+  if (!context) {
+    throw Error("No Theme context provided for component.");
+  }
+
+  return context;
+}

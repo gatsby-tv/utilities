@@ -1,8 +1,8 @@
 import { useContext } from "react";
 
-import { ScrollContext } from "./context";
+import { ScrollContext, ScrollContextType } from "./context";
 
-export const useScroll = () => {
+export function useScroll(): ScrollContextType {
   const scroll = useContext(ScrollContext);
 
   if (!scroll) {
@@ -10,4 +10,4 @@ export const useScroll = () => {
   }
 
   return scroll;
-};
+}
