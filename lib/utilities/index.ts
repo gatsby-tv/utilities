@@ -3,6 +3,7 @@ export * from "./use-toggle";
 export * from "./use-async";
 export * from "./use-select";
 export * from "./use-breakpoints";
+export * from "./use-forwarded-ref";
 export * from "./if-exists";
 export * from "./format";
 export * from "./unique-id";
