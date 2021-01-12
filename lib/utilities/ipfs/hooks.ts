@@ -14,6 +14,7 @@ import HLS from "hls.js";
 // @ts-ignore
 import HLSIPFSLoader from "hlsjs-ipfs-loader";
 import all from "it-all";
+import { IPFSContent } from "@gatsby-tv/types";
 
 import { useAsync } from "@lib/utilities/use-async";
 
@@ -135,11 +136,8 @@ interface IPFSContentState {
   url?: string;
 }
 
-export function useIPFSContent(
-  cid: string,
-  contentType: string
-): IPFSContentState {
-  const { result: generator } = useIPFSCommand("cat", cid);
+export function useIPFSContent(content: IPFSContent): IPFSContentState {
+  const { result: generator } = useIPFSCommand("cat", `/ipfs/${content.hash}`);
 
   const [state, dispatch] = useReducer(
     (state: IPFSContentState, action: IPFSAction) => {
@@ -165,11 +163,11 @@ export function useIPFSContent(
     async () => {
       if (!generator) return;
       const data: BlobPart[] = await all(generator);
-      const blob = new Blob([...data], { type: contentType });
+      const blob = new Blob([...data], { type: content.mimeType });
       return window.URL.createObjectURL(blob);
     },
     (url) => dispatch({ type: "sync", result: url }),
-    [generator, contentType]
+    [generator, content.mimeType]
   );
 
   useEffect(() => {
@@ -240,7 +238,7 @@ export function useIPFSVideoStream(hash: string): RefObject<HTMLVideoElement> {
       hls.config.ipfsHash = hash;
       hls.loadSource("master.m3u8");
       hls.attachMedia(ref.current as HTMLVideoElement);
-      hls.on(HLS.Events.MANIFEST_PARSED, () => ref.current?.play());
+      //hls.on(HLS.Events.MANIFEST_PARSED, () => ref.current?.play());
     } else {
       throw new Error("HLS is not supported.");
     }

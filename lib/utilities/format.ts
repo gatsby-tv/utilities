@@ -30,35 +30,37 @@ export function Time(seconds: number): string {
   }
 }
 
-function AgeFormatter(unix: number) {
-  const now = new Date();
-  const then = new Date(unix);
+function ReleaseDateFormatter(date: Date) {
+  const now = Date.now();
+  const then = +date;
+  const elapsed = new Date(now - then);
+  const epoch = new Date(0);
   const entries = Object.entries({
-    year: now.getFullYear() - then.getFullYear(),
-    month: now.getMonth() - then.getMonth(),
-    day: now.getDate() - then.getDate(),
-    hour: now.getHours() - then.getHours(),
-    minute: now.getMinutes() - then.getMinutes(),
-    second: now.getSeconds() - then.getSeconds(),
+    year: elapsed.getUTCFullYear() - epoch.getUTCFullYear(),
+    month: elapsed.getUTCMonth() - epoch.getUTCMonth(),
+    day: elapsed.getUTCDate() - epoch.getUTCDate(),
+    hour: elapsed.getUTCHours() - epoch.getUTCHours(),
+    minute: elapsed.getUTCMinutes() - epoch.getUTCMinutes(),
+    second: elapsed.getUTCSeconds() - epoch.getUTCSeconds(),
   });
   return entries[entries.findIndex((entry) => entry[1] !== 0)];
 }
 
-AgeFormatter.value = (entry: [string, number]) => Math.abs(entry[1]);
+ReleaseDateFormatter.value = (entry: [string, number]) => Math.abs(entry[1]);
 
-AgeFormatter.unit = (entry: [string, number]) =>
+ReleaseDateFormatter.unit = (entry: [string, number]) =>
   Math.abs(entry[1]) === 1 ? entry[0] : `${entry[0]}s`;
 
-AgeFormatter.suffix = (entry: [string, number]) =>
+ReleaseDateFormatter.suffix = (entry: [string, number]) =>
   entry[1] < 0 ? "from now" : "ago";
 
-export function Age(unix: number): string | undefined {
-  const age = AgeFormatter(unix);
-  if (typeof age === "undefined") return undefined;
+export function ReleaseDate(date: Date): string | undefined {
+  const formatter = ReleaseDateFormatter(date);
+  if (typeof formatter === "undefined") return undefined;
   return [
-    AgeFormatter.value(age),
-    AgeFormatter.unit(age),
-    AgeFormatter.suffix(age),
+    ReleaseDateFormatter.value(formatter),
+    ReleaseDateFormatter.unit(formatter),
+    ReleaseDateFormatter.suffix(formatter),
   ].join(" ");
 }
 
@@ -100,8 +102,8 @@ export function FullValue(num: number, unit?: string): string {
   return unit ? `${value} ${suffix}` : value;
 }
 
-export function FullAge(unix: number, locale?: string): string {
-  return new Date(unix).toLocaleDateString(locale ?? "en-US", {
+export function FullReleaseDate(date: Date, locale?: string): string {
+  return date.toLocaleDateString(locale ?? "en-US", {
     year: "numeric",
     month: "short",
     day: "numeric",
