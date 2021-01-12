@@ -16,7 +16,7 @@ import HLSIPFSLoader from "hlsjs-ipfs-loader";
 import all from "it-all";
 import { IPFSContent } from "@gatsby-tv/types";
 
-import { useAsync } from "@lib/utilities/use-async";
+import { useAsync } from "@lib/use-async";
 
 import { IPFSContext, IPFSContextType } from "./context";
 

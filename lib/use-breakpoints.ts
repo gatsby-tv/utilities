@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 
-import { useSelect } from "@lib/utilities/use-select";
+import { useSelect } from "@lib/use-select";
 
 export interface BreakpointSet {
   [key: string]: string;

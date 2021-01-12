@@ -8,9 +8,7 @@
     "declarationMap": true,
     "sourceMap": true,
     "outDir": "dist",
-    "rootDir": "./lib",
-    "baseUrl": "./lib",
-    "paths": { "@lib/*": ["*"] },
+    "paths": { "@lib/*": ["./lib/*"] },
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true
