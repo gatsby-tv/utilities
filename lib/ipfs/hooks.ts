@@ -22,21 +22,20 @@ import { IPFSContext, IPFSContextType } from "./context";
 
 let ipfs: any = undefined;
 
-const IPFS_CONFIG = {
-  repo: `ipfs/gatsby/${Math.random()}`,
+const IPFS_DEFAULT_CONFIG = {
+  repo: `/ipfs/gatsby/testing`,
 };
 
-export function useIPFSNode(): IPFSContextType {
-  const [error, setError] = useState<Error | null>(null);
+export function useIPFSNode(worker?: string): IPFSContextType {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [ready, setReady] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
     async function loadIPFS() {
       try {
         if (ipfs) return;
-        ipfs = await IPFS.create(IPFS_CONFIG);
-        HLS.DefaultConfig.loader = HLSIPFSLoader;
+        ipfs = await IPFS.create(IPFS_DEFAULT_CONFIG);
         const info = await ipfs.id();
         console.log(`IPFS node ready at /p2p/${info.id}`);
       } catch (error) {
@@ -49,11 +48,13 @@ export function useIPFSNode(): IPFSContextType {
     }
 
     loadIPFS();
+    HLS.DefaultConfig.loader = HLSIPFSLoader;
 
     return () => {
       if (ipfs && ipfs.stop) {
         ipfs.stop();
         ipfs = undefined;
+        setReady(false);
       }
     };
   }, []);
@@ -238,7 +239,7 @@ export function useIPFSVideoStream(hash: string): RefObject<HTMLVideoElement> {
       hls.config.ipfsHash = hash;
       hls.loadSource("master.m3u8");
       hls.attachMedia(ref.current as HTMLVideoElement);
-      //hls.on(HLS.Events.MANIFEST_PARSED, () => ref.current?.play());
+      hls.on(HLS.Events.MANIFEST_PARSED, () => ref.current?.play());
     } else {
       throw new Error("HLS is not supported.");
     }

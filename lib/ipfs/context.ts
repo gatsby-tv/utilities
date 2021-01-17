@@ -3,8 +3,8 @@
 import { createContext } from "react";
 
 export interface IPFSContextType {
-  ipfs: any;
-  error: Error | null;
+  readonly ipfs: any;
+  readonly error: Error | null;
 }
 
 export const IPFSContext = createContext<IPFSContextType | undefined>(

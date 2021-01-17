@@ -109,3 +109,23 @@ export function FullReleaseDate(date: Date, locale?: string): string {
     day: "numeric",
   });
 }
+
+export function ChannelHandle(handle: string) {
+  return `#${handle}`;
+}
+
+export function UserHandle(handle: string) {
+  return `@${handle}`;
+}
+
+export function Negative(size: string | number): string | number {
+  if (typeof size === "string") {
+    if (size[0] === "-") {
+      return size.slice(1);
+    } else {
+      return `-${size}`;
+    }
+  } else {
+    return -size;
+  }
+}

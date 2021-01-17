@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 
-import { useContext, useEffect, useCallback, DependencyList } from "react";
+import { useContext, useState, useEffect, useCallback, DependencyList } from "react";
 
 import { ModalContext } from "./context";
 
@@ -8,7 +8,13 @@ export interface ModalCallback {
   (event: any): void;
 }
 
-export function useModal(callback: ModalCallback, deps: DependencyList): void {
+export interface ModalType {
+  active: boolean;
+  activate: () => void;
+  deactivate: () => void;
+}
+
+export function useModalCallback(callback: ModalCallback, deps: DependencyList): void {
   const context = useContext(ModalContext);
 
   if (!context) {
@@ -23,4 +29,12 @@ export function useModal(callback: ModalCallback, deps: DependencyList): void {
     addModalCallback(_callback);
     return () => removeModalCallback(_callback);
   }, [addModalCallback, _callback]);
+}
+
+export function useModal(): ModalType {
+  const [active, setActive] = useState(false);
+  const activate  = useCallback(() => setActive(true), []);
+  const deactivate = useCallback(() => setActive(false), []);
+
+  return { active, activate, deactivate };
 }

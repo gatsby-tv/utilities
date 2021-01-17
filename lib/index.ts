@@ -14,4 +14,5 @@ export * from "./unique-id";
 export * from "./scroll";
 export * from "./ipfs";
 export * from "./modal";
+export * from "./frame";
 export * from "./global";

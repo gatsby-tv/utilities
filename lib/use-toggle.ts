@@ -1,17 +1,13 @@
 import { useState, useCallback } from "react";
 
-export interface ToggleType {
-  toggle: boolean | null;
-  flipToggle: () => void;
-  setToggle: (value: boolean) => void;
-}
+export type ToggleType = [boolean | undefined, () => void, (value: boolean) => void];
 
 export function useToggle(initial?: boolean): ToggleType {
-  const [toggle, setToggle] = useState(initial ?? null);
+  const [toggle, setToggle] = useState(initial ?? undefined);
 
-  return {
+  return [
     toggle,
-    flipToggle: useCallback(() => setToggle((state) => !state), []),
-    setToggle: useCallback((value: boolean) => setToggle(value), []),
-  };
+    useCallback(() => setToggle((state) => !state), []),
+    useCallback((value: boolean) => setToggle(value), []),
+  ];
 }

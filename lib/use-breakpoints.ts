@@ -11,10 +11,12 @@ interface MediaQueryHandler {
 }
 
 interface MediaQuerySpecification {
-  [key: string]: [MediaQueryList, MediaQueryHandler];
+  readonly [key: string]: [MediaQueryList, MediaQueryHandler];
 }
 
-export function useBreakpoints(points: BreakpointSet): string | undefined {
+export function useBreakpoints(
+  points: BreakpointSet
+): number | string | undefined {
   const items = Object.keys(points);
   const queries = useRef<MediaQuerySpecification>({});
   const [selection, setSelection] = useSelect(items);
@@ -31,6 +33,7 @@ export function useBreakpoints(points: BreakpointSet): string | undefined {
     queries.current = Object.fromEntries(
       items.map((item) => {
         const query = window.matchMedia(points[item]);
+        if (query.matches) setSelection(item);
         const handler = handleChange(item);
         query.addEventListener("change", handler);
         return [item, [query, handler]];
@@ -44,7 +47,13 @@ export function useBreakpoints(points: BreakpointSet): string | undefined {
         query[0].removeEventListener("change", query[1])
       );
     };
-  }, [items, points, setSelection]);
+  }, []);
 
-  return Object.keys(selection).find((item) => selection[item]);
+  const result = Object.keys(selection).find((item) => selection[item]);
+
+  if (result !== undefined && !isNaN(+result)) {
+    return +result;
+  } else {
+    return result;
+  }
 }
