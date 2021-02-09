@@ -224,12 +224,12 @@ export function useIPFSPeers(): IPFSPeersState {
   return state;
 }
 
-export function useIPFSVideoStream(hash: string): RefObject<HTMLVideoElement> {
+export function useIPFSVideoStream(hash?: string): RefObject<HTMLVideoElement> {
   const ref = useRef<HTMLVideoElement>(null);
   const { ipfs } = useIPFS();
 
   useEffect(() => {
-    if (!ipfs || !ref.current) return;
+    if (!ipfs || !ref.current || !hash) return;
 
     if (HLS.isSupported()) {
       const hls = new HLS();

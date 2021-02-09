@@ -26,7 +26,7 @@ export function useStabilizedCallback(
   const lastPosition = useRef<number | undefined>(undefined);
 
   const _callback = useCallback((...args: any[]) => {
-    lastPosition.current = scrollPosition.current;
+    lastPosition.current = scrollPosition.current as number;
     callback(...args);
   }, deps);
 

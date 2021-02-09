@@ -1,4 +1,4 @@
-import React, { createContext, MutableRefObject } from "react";
+import React, { createContext, RefObject } from "react";
 
 interface EventHandler {
   (event: React.SyntheticEvent): void;
@@ -9,7 +9,7 @@ export interface ScrollCallback {
 }
 
 export type ScrollContextType = {
-  scrollPosition: MutableRefObject<number>;
+  scrollPosition: RefObject<number>;
   setScrollPosition: (position: number) => void;
   addScrollListener: ScrollCallback;
   removeScrollListener: ScrollCallback;

@@ -31,13 +31,14 @@ export function Time(seconds: number): string {
 }
 
 function ReleaseDateFormatter(date: Date) {
-  const now = Date.now();
+  const now = Date.now() - new Date().getTimezoneOffset() * 60 * 1000;
   const then = +date;
   const elapsed = new Date(now - then);
   const epoch = new Date(0);
   const entries = Object.entries({
     year: elapsed.getUTCFullYear() - epoch.getUTCFullYear(),
     month: elapsed.getUTCMonth() - epoch.getUTCMonth(),
+    week: Math.floor((elapsed.getUTCDate() - epoch.getUTCDate()) / 7),
     day: elapsed.getUTCDate() - epoch.getUTCDate(),
     hour: elapsed.getUTCHours() - epoch.getUTCHours(),
     minute: elapsed.getUTCMinutes() - epoch.getUTCMinutes(),
@@ -54,8 +55,8 @@ ReleaseDateFormatter.unit = (entry: [string, number]) =>
 ReleaseDateFormatter.suffix = (entry: [string, number]) =>
   entry[1] < 0 ? "from now" : "ago";
 
-export function ReleaseDate(date: Date): string | undefined {
-  const formatter = ReleaseDateFormatter(date);
+export function ReleaseDate(date: Date | string | number): string | undefined {
+  const formatter = ReleaseDateFormatter(new Date(date));
   if (typeof formatter === "undefined") return undefined;
   return [
     ReleaseDateFormatter.value(formatter),
@@ -102,8 +103,8 @@ export function FullValue(num: number, unit?: string): string {
   return unit ? `${value} ${suffix}` : value;
 }
 
-export function FullReleaseDate(date: Date, locale?: string): string {
-  return date.toLocaleDateString(locale ?? "en-US", {
+export function FullReleaseDate(date: Date | string | number, locale?: string): string {
+  return new Date(date).toLocaleDateString(locale ?? "en-US", {
     year: "numeric",
     month: "short",
     day: "numeric",
