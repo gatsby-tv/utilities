@@ -103,7 +103,10 @@ export function FullValue(num: number, unit?: string): string {
   return unit ? `${value} ${suffix}` : value;
 }
 
-export function FullReleaseDate(date: Date | string | number, locale?: string): string {
+export function FullReleaseDate(
+  date: Date | string | number,
+  locale?: string
+): string {
   return new Date(date).toLocaleDateString(locale ?? "en-US", {
     year: "numeric",
     month: "short",
