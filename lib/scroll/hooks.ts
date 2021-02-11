@@ -21,20 +21,23 @@ export function useScroll(): ScrollContextType {
 export function useStabilizedCallback(
   callback: (...args: any[]) => void,
   deps: DependencyList
-) {
+): (...args: any[]) => any {
   const { scrollPosition, setScrollPosition } = useScroll();
   const lastPosition = useRef<number | undefined>(undefined);
 
-  const _callback = useCallback((...args: any[]) => {
-    lastPosition.current = scrollPosition.current as number;
-    callback(...args);
-  }, deps);
+  const _callback = useCallback(
+    (...args: any[]) => {
+      lastPosition.current = scrollPosition.current as number;
+      callback(...args);
+    },
+    [deps, scrollPosition] // eslint-disable-line react-hooks/exhaustive-deps
+  );
 
   useEffect(() => {
     if (lastPosition.current !== undefined) {
       setScrollPosition(lastPosition.current);
     }
-  }, deps);
+  }, [setScrollPosition, deps]);
 
   return _callback;
 }

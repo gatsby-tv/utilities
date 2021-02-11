@@ -14,9 +14,10 @@ interface MediaQuerySpecification {
   readonly [key: string]: [MediaQueryList, MediaQueryHandler];
 }
 
-export function useBreakpoints(
-  points: BreakpointSet
-): number | string | undefined {
+export function useBreakpoints<T extends string | number = number>(
+  points: BreakpointSet,
+  defaultValue: T
+): T {
   const items = Object.keys(points);
   const queries = useRef<MediaQuerySpecification>({});
   const [selection, setSelection] = useSelect(items);
@@ -47,13 +48,13 @@ export function useBreakpoints(
         query[0].removeEventListener("change", query[1])
       );
     };
-  }, []);
+  }, [items, points, setSelection]);
 
   const result = Object.keys(selection).find((item) => selection[item]);
 
   if (result !== undefined && !isNaN(+result)) {
-    return +result;
+    return +result as T;
   } else {
-    return result;
+    return (result as T) ?? defaultValue;
   }
 }

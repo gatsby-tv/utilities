@@ -26,9 +26,8 @@ const IPFS_DEFAULT_CONFIG = {
   repo: `/ipfs/gatsby/testing`,
 };
 
-export function useIPFSNode(worker?: string): IPFSContextType {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [ready, setReady] = useState(false);
+export function useIPFSNode(): IPFSContextType {
+  const [, setReady] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {

@@ -1,6 +1,6 @@
 /// <reference types="resize-observer-browser" />
 
-import { useCallback, DependencyList, RefObject } from "react";
+import { RefObject } from "react";
 
 import { useIsomorphicLayoutEffect } from "@lib/use-isomorphic-layout-effect";
 
@@ -11,12 +11,12 @@ export interface ResizeCallback {
 export function useResizeObserver<T extends HTMLElement = HTMLElement>(
   ref: RefObject<T>,
   callback: ResizeCallback
-) {
+): null {
   useIsomorphicLayoutEffect(() => {
     if (!ref.current) return;
 
     const observer = new ResizeObserver((entries: ResizeObserverEntry[]) => {
-      for (let entry of entries) {
+      for (const entry of entries) {
         if (entry.contentBoxSize) {
           callback(entry.contentBoxSize[0]);
         } else {
