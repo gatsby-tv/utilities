@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+
 import {
   useEffect,
   useRef,
@@ -25,19 +27,16 @@ export function useStabilizedCallback(
   const { scrollPosition, setScrollPosition } = useScroll();
   const lastPosition = useRef<number | undefined>(undefined);
 
-  const _callback = useCallback(
-    (...args: any[]) => {
-      lastPosition.current = scrollPosition.current as number;
-      callback(...args);
-    },
-    [deps, scrollPosition] // eslint-disable-line react-hooks/exhaustive-deps
-  );
+  const _callback = useCallback((...args: any[]) => {
+    lastPosition.current = scrollPosition.current as number;
+    callback(...args);
+  }, deps);
 
   useEffect(() => {
     if (lastPosition.current !== undefined) {
       setScrollPosition(lastPosition.current);
     }
-  }, [setScrollPosition, deps]);
+  }, deps);
 
   return _callback;
 }

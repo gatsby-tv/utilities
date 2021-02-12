@@ -18,9 +18,8 @@ export function useBreakpoints<T extends string | number = number>(
   points: BreakpointSet,
   defaultValue: T
 ): T {
-  const items = Object.keys(points);
   const queries = useRef<MediaQuerySpecification>({});
-  const [selection, setSelection] = useSelect(items);
+  const [selection, setSelection] = useSelect(Object.keys(points));
 
   useEffect(() => {
     const handleChange = (item: string): MediaQueryHandler => {
@@ -32,7 +31,7 @@ export function useBreakpoints<T extends string | number = number>(
     };
 
     queries.current = Object.fromEntries(
-      items.map((item) => {
+      Object.keys(points).map((item) => {
         const query = window.matchMedia(points[item]);
         if (query.matches) setSelection(item);
         const handler = handleChange(item);
@@ -48,7 +47,7 @@ export function useBreakpoints<T extends string | number = number>(
         query[0].removeEventListener("change", query[1])
       );
     };
-  }, [items, points, setSelection]);
+  }, [points, setSelection]);
 
   const result = Object.keys(selection).find((item) => selection[item]);
 
