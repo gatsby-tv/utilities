@@ -11,7 +11,7 @@ export interface ResizeCallback {
 export function useResizeObserver<T extends HTMLElement = HTMLElement>(
   ref: RefObject<T>,
   callback: ResizeCallback
-): null {
+): void {
   useIsomorphicLayoutEffect(() => {
     if (!ref.current) return;
 
